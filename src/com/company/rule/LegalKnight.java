@@ -1,6 +1,9 @@
-package com.company;
+package com.company.rule;
 
-public class LegalKnight implements Rule{
+import com.company.Board;
+import com.company.Rule;
+
+public class LegalKnight implements Rule {
     @Override
     public boolean check(String move, Board board) {
         if (move.charAt(0) != 'N')

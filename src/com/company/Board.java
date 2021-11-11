@@ -1,5 +1,7 @@
 package com.company;
 
+import com.company.rule.*;
+
 public class Board{
 
     public Piece[][] board = new Piece[8][8];
@@ -8,7 +10,9 @@ public class Board{
         new LegalPawn(),
         new LegalRook(),
         new LegalKnight(),
-        new LegalBishop()
+        new LegalBishop(),
+        new LegalKing(),
+        new LegalQueen()
     };
 
     public Board() {
@@ -46,40 +50,6 @@ public class Board{
         board[5][6] = new Piece(Color.BLACK, Figure.PAWN);
         board[6][6] = new Piece(Color.BLACK, Figure.PAWN);
         board[7][6] = new Piece(Color.BLACK, Figure.PAWN);
-    }
-
-    public boolean isLegalKing(String move){
-        int x = 1;
-        if(move.charAt(4) == move.charAt(2)){
-            if(move.charAt(1) == move.charAt(3) - x)
-                return true;
-            else if(move.charAt(1) == move.charAt(3) + x)
-                return true;
-        }
-
-        if(move.charAt(1) == move.charAt(3)){
-            if(move.charAt(4) == move.charAt(2) - x)
-                return true;
-            else if(move.charAt(4) == move.charAt(2) + x)
-                return true;
-        }
-
-        if(move.charAt(4) - x == move.charAt(2) && move.charAt(1) - x == move.charAt(3)){
-            return true;
-        }
-
-        return false;
-    }
-
-    public boolean isLegalQueen(String move){
-        int x = move.charAt(4) - move.charAt(2);
-        if(move.charAt(4) - x == move.charAt(2) && move.charAt(1) - x == move.charAt(3)){
-            return true;
-        }
-        if(move.charAt(1) == move.charAt(3) || move.charAt(2) == move.charAt(4)){
-            return true;
-        }
-        return false;
     }
 
     public static int getConverter(String move, int y){

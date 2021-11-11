@@ -1,4 +1,7 @@
-package com.company;
+package com.company.rule;
+
+import com.company.Board;
+import com.company.Rule;
 
 public class LegalNotation implements Rule {
     static String Pieces = "PNBKQR";
