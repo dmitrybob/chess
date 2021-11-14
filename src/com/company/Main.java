@@ -3,6 +3,7 @@ package com.company;
 import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
+        //todo make it so you can't eat your own pieces
         Scanner scanner = new Scanner(System.in);
         Board board = new Board();
         while (true) {

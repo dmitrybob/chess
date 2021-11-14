@@ -1,7 +1,6 @@
 package com.company.rule;
 
 import com.company.Board;
-import com.company.Rule;
 
 import static com.company.Board.getConverter;
 

@@ -1,7 +1,6 @@
 package com.company.rule;
 
 import com.company.Board;
-import com.company.Rule;
 
 public class LegalKing implements Rule {
     @Override

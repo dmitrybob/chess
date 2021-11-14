@@ -1,4 +1,7 @@
-package com.company;
+package com.company.Enums;
+
+import com.company.Enums.Color;
+import com.company.Enums.Figure;
 
 public class Piece {
    public Color color;

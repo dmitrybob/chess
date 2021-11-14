@@ -1,4 +1,4 @@
-package com.company;
+package com.company.Enums;
 
 public enum Figure {
     PAWN,

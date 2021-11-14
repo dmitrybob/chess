@@ -1,10 +1,14 @@
 package com.company;
 
+import com.company.Enums.Color;
+import com.company.Enums.Figure;
+import com.company.Enums.Piece;
 import com.company.rule.*;
 
 public class Board{
 
     public Piece[][] board = new Piece[8][8];
+
     private Rule[] rules = {
         new LegalNotation(),
         new LegalPawn(),
@@ -12,8 +16,11 @@ public class Board{
         new LegalKnight(),
         new LegalBishop(),
         new LegalKing(),
-        new LegalQueen()
+        new LegalQueen(),
+        new CheckPosition()
     };
+
+    public boolean whiteTurn = true;
 
     public Board() {
         //White pieces
@@ -109,23 +116,21 @@ public class Board{
         if(board[getConverter(move, 1)][getConverter(move, 2)] != null) {
             if (whiteTurn) {
                 if (board[getConverter(move, 1)][getConverter(move, 2)].color == Color.WHITE && board[getConverter(move, 1)][getConverter(move, 2)].figure == Figure.PAWN) {
-                    board[getConverter(move, 3)][move.charAt(4)] = new Piece(Color.WHITE, Figure.PAWN);
-                    board[getConverter(move, 1)][move.charAt(2)] = null;
-                    whiteTurn = !whiteTurn;
+                    board[getConverter(move, 3)][getConverter(move, 4)] = new Piece(Color.WHITE, Figure.PAWN);
+                    board[getConverter(move, 1)][getConverter(move, 2)] = null;
+
                 }
             }
-            if (!whiteTurn) {
+            else{
                 if (board[getConverter(move, 1)][getConverter(move, 2)].color == Color.BLACK && board[getConverter(move, 1)][getConverter(move, 2)].figure == Figure.PAWN) {
                     board[getConverter(move, 3)][getConverter(move, 4)] = new Piece(Color.BLACK, Figure.PAWN);
                     board[getConverter(move, 1)][getConverter(move, 2)] = null;
-                    whiteTurn = !whiteTurn;
                 }
             }
         }
     }
 
     public void move(String move) {
-        /* boolean whiteTurn = true;
         if(move.charAt(0) == 'P') {
             wbmove(whiteTurn, Figure.PAWN, move);
         }
@@ -143,7 +148,8 @@ public class Board{
         }
         if(move.charAt(0) == 'K') {
             wbmove(whiteTurn, Figure.KING, move);
-        } */
+        }
+        whiteTurn = !whiteTurn;
     }
 
     public boolean isLegalMove(String move){
@@ -152,34 +158,5 @@ public class Board{
                 return false;
         return true;
     }
-        /*if(isLegalNotation(move)) {
-            if (move.charAt(0) == 'P') {
-                if (isLegalMovePawn(move))
-                    return true;
-            }
-            if (move.charAt(0) == 'R') {
-                if (isLegalMoveRook(move))
-                    return true;
-            }
-            if (move.charAt(0) == 'B') {
-                if (isLegalBishop(move))
-                    return true;
-            }
-            if (move.charAt(0) == 'N') {
-                if (isLegalKnight(move))
-                    return true;
-            }
-            if (move.charAt(0) == 'K') {
-                if (isLegalKing(move))
-                    return true;
-            }
-            if (move.charAt(0) == 'Q') {
-                if (isLegalQueen(move))
-                    return true;
-            }
-        }
-        return false;
-    }
-         */
 }
 
