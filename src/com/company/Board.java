@@ -17,7 +17,8 @@ public class Board{
         new LegalBishop(),
         new LegalKing(),
         new LegalQueen(),
-        new CheckPosition()
+        new CheckPosition(),
+        new IsSameColor()
     };
 
     public boolean whiteTurn = true;
@@ -116,6 +117,10 @@ public class Board{
         if(board[getConverter(move, 1)][getConverter(move, 2)] != null) {
             if (whiteTurn) {
                 if (board[getConverter(move, 1)][getConverter(move, 2)].color == Color.WHITE && board[getConverter(move, 1)][getConverter(move, 2)].figure == Figure.PAWN) {
+                    if(board[getConverter(move, 3)][getConverter(move, 4)] != null){
+                        System.out.println("A piece was eaten");
+                    }
+                    board[getConverter(move, 3)][getConverter(move, 4)] = null;
                     board[getConverter(move, 3)][getConverter(move, 4)] = new Piece(Color.WHITE, Figure.PAWN);
                     board[getConverter(move, 1)][getConverter(move, 2)] = null;
 
@@ -123,6 +128,10 @@ public class Board{
             }
             else{
                 if (board[getConverter(move, 1)][getConverter(move, 2)].color == Color.BLACK && board[getConverter(move, 1)][getConverter(move, 2)].figure == Figure.PAWN) {
+                    if(board[getConverter(move, 3)][getConverter(move, 4)] != null){
+                        System.out.println("A piece was eaten");
+                    }
+                    board[getConverter(move, 3)][getConverter(move, 4)] = null;
                     board[getConverter(move, 3)][getConverter(move, 4)] = new Piece(Color.BLACK, Figure.PAWN);
                     board[getConverter(move, 1)][getConverter(move, 2)] = null;
                 }
@@ -153,9 +162,40 @@ public class Board{
     }
 
     public boolean isLegalMove(String move){
-        for(Rule rule: rules)
-            if(!rule.check(move, this))
+        int x = 0;
+        for(Rule rule: rules) {
+            x++;
+            if(!rule.check(move, this)) {
+                if(x == 1){
+                    System.out.println("This is not a correctly written rule");
+                }
+                if(x == 2){
+                    System.out.println("This is not a legal pawn move or a piece is in the way");
+                }
+                if(x == 3){
+                    System.out.println("This is not a legal rook move or a piece is in the way");
+                }
+                if(x == 4){
+                    System.out.println("This is not a legal knight move or a piece is in the way");
+                }
+                if(x == 5){
+                    System.out.println("This is not a legal bishop move or a piece is in the way");
+                }
+                if(x == 6){
+                    System.out.println("This is not a legal king move or a piece is in the way");
+                }
+                if(x == 7){
+                    System.out.println("This is not a legal queen move or a piece is in the way");
+                }
+                if(x == 8){
+                    System.out.println("That piece is not in that square");
+                }
+                if(x == 9){
+                    System.out.println("You have a piece on that square");
+                }
                 return false;
+            }
+        }
         return true;
     }
 }

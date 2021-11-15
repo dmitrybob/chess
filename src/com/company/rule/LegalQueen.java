@@ -19,7 +19,7 @@ public class LegalQueen implements Rule {
         int x = move.charAt(4) - move.charAt(2);
         int h = move.charAt(3) - move.charAt(1);
         //bishop like movements
-        if(move.charAt(4) - x == move.charAt(2) && move.charAt(3) - x == move.charAt(1)){
+        if(move.charAt(4) - x == move.charAt(2) && move.charAt(3) - h == move.charAt(1)) {
             if(x < 0 && h < 0) {
                 for (int i = a - 1; i > c; i--) {
                     if (board.board[i - 1][z - 1] != null)
@@ -41,7 +41,7 @@ public class LegalQueen implements Rule {
                     z--;
                 }
             }
-            else{
+            else if(x > 0 && h < 0){
                 for (int i = a - 1; i < c; i--) {
                     if (board.board[i-1][b-1] != null)
                         return false;

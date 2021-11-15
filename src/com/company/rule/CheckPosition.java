@@ -9,6 +9,8 @@ import static com.company.Board.getConverter;
 public class CheckPosition implements Rule {
     @Override
     public boolean check(String move, Board board) {
+        if(board.board[getConverter(move, 1)][getConverter(move, 2)] == null)
+            return false;
         if(board.whiteTurn){
             if(move.charAt(0) == 'P') {
                 if(board.board[getConverter(move, 1)][getConverter(move, 2)].color == Color.WHITE)

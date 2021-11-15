@@ -3,7 +3,11 @@ package com.company;
 import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
-        //todo make it so you can't eat your own pieces
+        /*
+        bugs to fix
+        Eating is not working well for everyone other than pawns
+        Pieces are not in positions their supposed to be
+         */
         Scanner scanner = new Scanner(System.in);
         Board board = new Board();
         while (true) {
@@ -14,7 +18,7 @@ public class Main {
                 System.out.println("your last move was legal");
                 board.move(move);
             } else {
-                System.out.println("your last move was not legal");
+                //System.out.println("your last move was not legal");
             }
         }
     }
