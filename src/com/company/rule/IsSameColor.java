@@ -2,25 +2,20 @@ package com.company.rule;
 
 import com.company.Board;
 import com.company.Enums.Color;
+import com.company.Move;
 
-import static com.company.Board.getConverter;
 
 public class IsSameColor implements Rule {
     @Override
-    public boolean check(String move, Board board) {
-        if(board.board[getConverter(move, 3)][getConverter(move, 4)] == null)
+    public boolean check(Move move, Board board) {
+        if(board.pieceAt(move.to) == null)
             return true;
-        if (board.whiteTurn) {
-            if (board.board[getConverter(move, 3)][getConverter(move, 4)].color == Color.WHITE)
-                return false;
-            else
-                return true;
-        }
-        else{
-            if (board.board[getConverter(move, 3)][getConverter(move, 4)].color == Color.BLACK)
-                return false;
-            else
-                return true;
-        }
+
+        if (board.whiteTurn)
+            return !(board.pieceAt(move.to).color == Color.WHITE);
+        else
+            return !(board.pieceAt(move.to).color == Color.BLACK);
+
+
     }
 }

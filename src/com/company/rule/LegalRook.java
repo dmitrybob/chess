@@ -1,54 +1,47 @@
 package com.company.rule;
 
 import com.company.Board;
-
-import static com.company.Board.getConverter;
+import com.company.Enums.Figure;
+import com.company.Enums.Piece;
+import com.company.Move;
 
 public class LegalRook implements Rule {
     @Override
-    public boolean check(String move, Board board) {
-        if(move.charAt(0) != 'R')
+    public boolean check(Move move, Board board) {
+        Piece piece = board.pieceAt(move.from);
+
+        if (piece == null || piece.figure != Figure.ROOK)
             return true;
-        int a = getConverter(move, 1) + 1;
-        int b = getConverter(move, 2) + 1;
-        int x = getConverter(move, 3) + 1;
-        int y = getConverter(move, 4) + 1;
-        if(move.charAt(1) == move.charAt(3)) {
-            if(b < y){
-                for (int i = b+1; i < y; i++) {
-                    if (board.board[a-1][i-1] != null) {
-                        return false;
-                    }
-                }
-            }
-            else{
-                for (int i = y+1; i < b; i++) {
-                    if (board.board[a-1][i-1] != null) {
-                        return false;
-                    }
-                }
-            }
-        }
-        else if(move.charAt(2) == move.charAt(4)){
-            if(a < x) {
-                for (int i = a + 1; i < y; i++) {
-                    if (board.board[i-1][b-1] != null) {
-                        return false;
-                    }
-                }
-            }
-            else{
-                for (int i = x + 1; i < a; i++) {
-                    if (board.board[i-1][b-1] != null) {
-                        return false;
-                    }
-                }
+
+        // check if legal move
+        if(move.from.x != move.to.x && move.from.y != move.to.y)
+            return false;
+
+        // check no figure in the way
+        int steps = Math.max(Math.abs(move.to.x - move.from.x),  Math.abs(move.to.y - move.from.y));
+        int i = move.from.x, j = move.from.y, count = 0;
+        while (count < steps) {
+
+            if(count != 0 && board.pieceAt(i, j) != null) {
+                System.out.println("error at " + i + ":" + j);
+                return false;
             }
 
+            // move on to next step
+            count++;
+            if( move.to.x - move.from.x > 0)
+                i++;
+            else if (move.to.x - move.from.x < 0)
+                i--;
+            else {
+                if (move.to.y - move.from.y > 0)
+                    j++;
+                else
+                    j--;
+            }
         }
-        else
-            return false;
 
         return true;
     }
+
 }

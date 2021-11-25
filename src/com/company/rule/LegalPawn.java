@@ -1,63 +1,63 @@
 package com.company.rule;
 
 import com.company.Board;
+import com.company.Enums.Figure;
+import com.company.Enums.Piece;
+import com.company.Move;
 
-import static com.company.Board.getConverter;
 
 public class LegalPawn implements Rule {
     @Override
-    public boolean check(String move, Board board) {
-        if (move.charAt(0) != 'P')
+    public boolean check(Move move, Board board) {
+        Piece piece = board.pieceAt(move.from);
+
+        if (piece == null || piece.figure != Figure.PAWN)
             return true;
-        int a = getConverter(move, 1) + 1;
-        int b = getConverter(move, 2) + 1;
-        int x = getConverter(move, 3) + 1;
-        int y = getConverter(move, 4) + 1;
-        if (a == x) {
+
+        if (move.from.x == move.to.x) {
             if (board.whiteTurn){
-                if (b == y - 1) {
-                    if (board.board[x - 1][y - 1] == null)
+                // if moves by one
+                if (move.from.y == move.to.y - 1) {
+                    // if moves to empty cell
+                    if (board.board[move.to.x][move.to.y] == null)
                         return true;
-                }
-                else if (b == 2 && b == y - 2) {
-                    for (int i = b; i <= y - 1; i++) {
-                        if (board.board[x - 1][i] != null)
+                  // moves two squares from initial position
+                } else if (move.from.y == 1 && move.from.y == move.to.y - 2) {
+                    // check if figure in the way
+                    for (int i = move.from.y + 1; i <= move.to.y; i++) {
+                        if (board.board[move.to.x][i] != null)
                             return false;
                     }
                     return true;
                 }
-            }
-            else{
-                if (b == y + 1) {
-                    if (board.board[x - 1][y - 1] == null)
+            } else {
+                if (move.from.y == move.to.y + 1) {
+                    if (board.board[move.to.x][move.to.y] == null)
                         return true;
-                } else if (b == 7 && b == y + 2) {
-                    for (int i = b; i <= y + 1; i++) {
-                        if (board.board[x - 1][i] != null)
+                } else if (move.from.y == 6 && move.from.y == move.to.y + 2) {
+                    for (int i = move.from.y - 1; i >= move.to.y; i--) {
+                        if (board.board[move.to.x][i] != null)
                             return false;
                     }
                     return true;
                 }
             }
         }
+        // check if eats figure
         if(board.whiteTurn){
-            if(y - 1 == b){
-                if(x - 1 == a || x + 1 == a){
-                    if(board.board[x-1][y-1] == null)
-                        return false;
-                    else
-                        return true;
-                }
+            if(move.to.y - 1 == move.from.y){
+                if(move.to.x - 1 == move.from.x)
+                    return !(board.board[move.to.x-1][move.to.y-1] == null);
+                if(move.to.x + 1 == move.from.x)
+                    return !(board.board[move.to.x+1][move.to.y-1] == null);
             }
         }
         else{
-            if(y + 1 == b){
-                if(x - 1 == a || x + 1 == a){
-                    if(board.board[x-1][y-1] == null)
-                        return false;
-                    else
-                        return true;
-                }
+            if(move.to.y + 1 == move.from.y){
+                if(move.to.x - 1 == move.from.x)
+                    return !(board.board[move.to.x-1][move.to.y-1] == null);
+                if(move.to.x + 1 == move.from.x)
+                    return !(board.board[move.to.x+1][move.to.y-1] == null);
             }
         }
         return false;

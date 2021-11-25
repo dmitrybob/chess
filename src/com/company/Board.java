@@ -10,7 +10,6 @@ public class Board{
     public Piece[][] board = new Piece[8][8];
 
     private Rule[] rules = {
-        new LegalNotation(),
         new LegalPawn(),
         new LegalRook(),
         new LegalKnight(),
@@ -60,137 +59,120 @@ public class Board{
         board[7][6] = new Piece(Color.BLACK, Figure.PAWN);
     }
 
-    public static int getConverter(String move, int y){
+    public Piece pieceAt(Cell cell) {
+        return board[cell.x][cell.y];
+    }
+
+    public Piece pieceAt(int x, int y) {
+        return board[x][y];
+    }
+
+    public static Move stringToMove(String userInput, boolean isWhiteTurn) {
+
+        Figure figure = null;
+        switch (userInput.charAt(0)) {
+            case 'P':
+                figure = Figure.PAWN;
+                break;
+            case 'K':
+                figure = Figure.KING;
+                break;
+            case 'N':
+                figure = Figure.KNIGHT;
+                break;
+            case 'B':
+                figure = Figure.BISHOP;
+                break;
+            case 'R':
+                figure = Figure.ROOK;
+                break;
+            case 'Q':
+                figure = Figure.QUEEN;
+                break;
+            default:
+                break;
+        }
+
+        int x1 = charToInt(userInput.charAt(1));
+        int y1 = userInput.charAt(2) - '1';
+        int x2 = charToInt(userInput.charAt(3));
+        int y2 = userInput.charAt(4) - '1';
+
+        Color color = isWhiteTurn ? Color.WHITE : Color.BLACK;
+        Move move = new Move(figure, color, new Cell(x1, y1), new Cell(x2, y2));
+
+        return move;
+    }
+
+    private static int charToInt(char c) {
         int x = 0;
-        if(move.charAt(y) == 'a'){
-            x = 0;
+        switch (c) {
+            case 'a':
+                x = 0;
+                break;
+            case 'b':
+                x = 1;
+                break;
+            case 'c':
+                x = 2;
+                break;
+            case 'd':
+                x = 3;
+                break;
+            case 'e':
+                x = 4;
+                break;
+            case 'f':
+                x = 5;
+                break;
+            case 'g':
+                x = 6;
+                break;
+            case 'h':
+                x = 7;
+                break;
         }
-        if(move.charAt(y) == 'b'){
-            x = 1;
-        }
-        if(move.charAt(y) == 'c'){
-            x = 2;
-        }
-        if(move.charAt(y) == 'd'){
-            x = 3;
-        }
-        if(move.charAt(y) == 'e'){
-            x = 4;
-        }
-        if(move.charAt(y) == 'f'){
-            x = 5;
-        }
-        if(move.charAt(y) == 'g'){
-            x = 6;
-        }
-        if(move.charAt(y) == 'h'){
-            x = 7;
-        }
-        if(move.charAt(y) == '1'){
-            x = 0;
-        }
-        if(move.charAt(y) == '2'){
-            x = 1;
-        }
-        if(move.charAt(y) == '3'){
-            x = 2;
-        }
-        if(move.charAt(y) == '4'){
-            x = 3;
-        }
-        if(move.charAt(y) == '5'){
-            x = 4;
-        }
-        if(move.charAt(y) == '6'){
-            x = 5;
-        }
-        if(move.charAt(y) == '7'){
-            x = 6;
-        }
-        if(move.charAt(y) == '8'){
-            x = 7;
-        }
+
         return x;
     }
 
-    public void wbmove(boolean whiteTurn, Figure figure, String move){
-        if(board[getConverter(move, 1)][getConverter(move, 2)] != null) {
-            if (whiteTurn) {
-                if (board[getConverter(move, 1)][getConverter(move, 2)].color == Color.WHITE && board[getConverter(move, 1)][getConverter(move, 2)].figure == Figure.PAWN) {
-                    if(board[getConverter(move, 3)][getConverter(move, 4)] != null){
-                        System.out.println("A piece was eaten");
-                    }
-                    board[getConverter(move, 3)][getConverter(move, 4)] = null;
-                    board[getConverter(move, 3)][getConverter(move, 4)] = new Piece(Color.WHITE, Figure.PAWN);
-                    board[getConverter(move, 1)][getConverter(move, 2)] = null;
-
-                }
-            }
-            else{
-                if (board[getConverter(move, 1)][getConverter(move, 2)].color == Color.BLACK && board[getConverter(move, 1)][getConverter(move, 2)].figure == Figure.PAWN) {
-                    if(board[getConverter(move, 3)][getConverter(move, 4)] != null){
-                        System.out.println("A piece was eaten");
-                    }
-                    board[getConverter(move, 3)][getConverter(move, 4)] = null;
-                    board[getConverter(move, 3)][getConverter(move, 4)] = new Piece(Color.BLACK, Figure.PAWN);
-                    board[getConverter(move, 1)][getConverter(move, 2)] = null;
-                }
-            }
-        }
+    public void updateBoard(Move move){
+        board[move.from.x][move.from.y] = null;
+        board[move.to.x][move.to.y] = new Piece(move.color, move.figure);
     }
 
-    public void move(String move) {
-        if(move.charAt(0) == 'P') {
-            wbmove(whiteTurn, Figure.PAWN, move);
-        }
-        if(move.charAt(0) == 'R') {
-            wbmove(whiteTurn, Figure.ROOK, move);
-        }
-        if(move.charAt(0) == 'N') {
-            wbmove(whiteTurn, Figure.KNIGHT, move);
-        }
-        if(move.charAt(0) == 'B') {
-            wbmove(whiteTurn, Figure.BISHOP, move);
-        }
-        if(move.charAt(0) == 'Q') {
-            wbmove(whiteTurn, Figure.QUEEN, move);
-        }
-        if(move.charAt(0) == 'K') {
-            wbmove(whiteTurn, Figure.KING, move);
-        }
+    public void move(Move move) {
+        updateBoard(move);
         whiteTurn = !whiteTurn;
     }
 
-    public boolean isLegalMove(String move){
+    public boolean isLegalMove(Move move){
         int x = 0;
         for(Rule rule: rules) {
             x++;
             if(!rule.check(move, this)) {
                 if(x == 1){
-                    System.out.println("This is not a correctly written rule");
-                }
-                if(x == 2){
                     System.out.println("This is not a legal pawn move or a piece is in the way");
                 }
-                if(x == 3){
+                if(x == 2){
                     System.out.println("This is not a legal rook move or a piece is in the way");
                 }
-                if(x == 4){
+                if(x == 3){
                     System.out.println("This is not a legal knight move or a piece is in the way");
                 }
-                if(x == 5){
+                if(x == 4){
                     System.out.println("This is not a legal bishop move or a piece is in the way");
                 }
-                if(x == 6){
+                if(x == 5){
                     System.out.println("This is not a legal king move or a piece is in the way");
                 }
-                if(x == 7){
+                if(x == 6){
                     System.out.println("This is not a legal queen move or a piece is in the way");
                 }
-                if(x == 8){
+                if(x == 7){
                     System.out.println("That piece is not in that square");
                 }
-                if(x == 9){
+                if(x == 8){
                     System.out.println("You have a piece on that square");
                 }
                 return false;

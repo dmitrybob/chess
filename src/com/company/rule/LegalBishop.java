@@ -1,53 +1,41 @@
 package com.company.rule;
-
 import com.company.Board;
-
-import static com.company.Board.getConverter;
+import com.company.Enums.Figure;
+import com.company.Enums.Piece;
+import com.company.Move;
 
 public class LegalBishop implements Rule {
     @Override
-    public boolean check(String move, Board board) {
-        if (move.charAt(0) != 'B')
+    public boolean check(Move move, Board board) {
+        Piece piece = board.pieceAt(move.from);
+        if (piece == null || piece.figure != Figure.BISHOP)
             return true;
+        int x = Math.abs(move.to.x - move.from.x);
+        int y = Math.abs(move.to.y - move.from.y);
+        if(x != y)
+            return false;
 
-        int a = getConverter(move, 1) + 1;
-        int b = getConverter(move, 2) + 2;
-        int z = getConverter(move, 2);
-        int c = getConverter(move, 3) + 1;
-        int x = move.charAt(4) - move.charAt(2);
-        int h = move.charAt(3) - move.charAt(1);
 
-        if(move.charAt(4) - x == move.charAt(2) && move.charAt(3) - h == move.charAt(1)) {
-            if(x < 0 && h < 0) {
-                for (int i = a - 1; i > c; i--) {
-                    if (board.board[i - 1][z - 1] != null)
-                        return false;
-                    z--;
-                }
+        int i = move.from.x, j = move.from.y, count = 0;
+        while (count < x) {
+
+            if(count != 0 && board.pieceAt(i, j) != null) {
+                return false;
             }
-            else if(x > 0 && h > 0) {
-                for (int i = a + 1; i < c; i++) {
-                    if (board.board[i-1][b-1] != null)
-                        return false;
-                    b++;
-                }
-            }
-            else if(x < 0 && h > 0){
-                for (int i = a + 1; i < c; i++) {
-                    if (board.board[i-1][z-1] != null)
-                        return false;
-                    z--;
-                }
-            }
-            else if(x > 0 && h < 0){
-                for (int i = a - 1; i < c; i--) {
-                    if (board.board[i-1][b-1] != null)
-                        return false;
-                    b++;
-                }
-            }
-            return true;
+
+            // move on to next step
+            count++;
+            if( move.to.x - move.from.x > 0)
+                i++;
+            else
+                i--;
+            if( move.to.y - move.from.y > 0)
+                j++;
+            else
+                j--;
         }
-        return false;
+
+        return true;
     }
+
 }

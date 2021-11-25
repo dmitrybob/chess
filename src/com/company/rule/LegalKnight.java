@@ -1,20 +1,25 @@
 package com.company.rule;
 
 import com.company.Board;
+import com.company.Enums.Figure;
+import com.company.Enums.Piece;
+import com.company.Move;
 
 public class LegalKnight implements Rule {
     @Override
-    public boolean check(String move, Board board) {
-        if (move.charAt(0) != 'N')
+    public boolean check(Move move, Board board) {
+        Piece piece = board.pieceAt(move.from);
+
+        if (piece == null || piece.figure != Figure.KNIGHT)
             return true;
         int x = 1;
         int y = 2;
-        if(move.charAt(4) - x == move.charAt(2) || move.charAt(4) + x == move.charAt(2)){
-            if(move.charAt(3) - y == move.charAt(1) || move.charAt(3) + y == move.charAt(1))
+        if(move.to.y - x == move.from.y || move.to.y + x == move.from.y){
+            if(move.to.x - y == move.from.x || move.to.x + y == move.from.x)
                 return true;
         }
-        else if(move.charAt(4) - y == move.charAt(2) || move.charAt(4) + y == move.charAt(2)){
-            if(move.charAt(3) - x == move.charAt(1) || move.charAt(3) + x == move.charAt(1)){
+        else if(move.to.y - y == move.from.y || move.to.y + y == move.from.y){
+            if(move.to.x - x == move.from.x || move.to.x + x == move.from.x){
                 return true;
             }
         }
