@@ -10,7 +10,6 @@ public class LegalPawn implements Rule {
     @Override
     public boolean check(Move move, Board board) {
         Piece piece = board.pieceAt(move.from);
-
         if (piece == null || piece.figure != Figure.PAWN)
             return true;
 

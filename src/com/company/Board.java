@@ -17,7 +17,8 @@ public class Board{
         new LegalKing(),
         new LegalQueen(),
         new CheckPosition(),
-        new IsSameColor()
+        new IsSameColor(),
+        new ifCheck()
     };
 
     public boolean whiteTurn = true;
