@@ -10,6 +10,11 @@ public class LegalBishop implements Rule {
         Piece piece = board.pieceAt(move.from);
         if (piece == null || piece.figure != Figure.BISHOP)
             return true;
+
+        return isDiagonalMove(move, board);
+    }
+
+    public static boolean isDiagonalMove(Move move, Board board) {
         int x = Math.abs(move.to.x - move.from.x);
         int y = Math.abs(move.to.y - move.from.y);
         if(x != y)
@@ -36,6 +41,7 @@ public class LegalBishop implements Rule {
         }
 
         return true;
+
     }
 
 }

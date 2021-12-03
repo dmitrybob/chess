@@ -17,8 +17,7 @@ public class Board{
         new LegalKing(),
         new LegalQueen(),
         new CheckPosition(),
-        new IsSameColor(),
-        new ifCheck()
+        new IsSameColor()
     };
 
     public boolean whiteTurn = true;
@@ -180,6 +179,47 @@ public class Board{
             }
         }
         return true;
+    }
+
+    public boolean isCheck(Color kingColor){
+        //color is the color of the king
+        Color otherColor = kingColor == Color.WHITE ? Color.BLACK : Color.WHITE;
+        Cell kingPos = null;
+        for(int i = 0; i <= 7; i++){
+            for(int j = 0; j <= 7; j++){
+                if(board[i][j] == null)
+                    continue;
+                if(board[i][j].figure == Figure.KING && board[i][j].color == kingColor) {
+                    kingPos = new Cell(i, j);
+                    break;
+                }
+            }
+        }
+
+        for(int i = 0; i <= 7; i++){
+            for(int j = 0; j <= 7; j++){
+                if(board[i][j] == null || board[i][j].figure == Figure.KING)
+                    continue;
+                if(board[i][j].color == otherColor) {
+                    Cell figurePos = new Cell(i, j);
+                    Move move = new Move(board[i][j].figure, otherColor, figurePos, kingPos);
+                    // is any rule broken?
+                    boolean isIllegal = false;
+                    for(Rule rule: rules) {
+                        if(!rule.check(move, this)) {
+                            isIllegal = true;
+                            break;
+                        }
+                    }
+
+                    if(!isIllegal) {
+                        System.out.println(move);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
 

@@ -1,5 +1,7 @@
 package com.company;
 
+import com.company.Enums.Color;
+
 import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
@@ -20,8 +22,9 @@ public class Main {
             if (res) {
                 System.out.println("your last move was legal");
                 board.move(move);
-            } else {
-                //System.out.println("your last move was not legal");
+                boolean isCheckWhite = board.isCheck(Color.WHITE);
+                boolean isCheckBlack = board.isCheck(Color.BLACK);
+                System.out.println("check " + isCheckWhite + " " + isCheckBlack);
             }
         }
     }

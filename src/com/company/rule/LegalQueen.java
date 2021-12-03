@@ -13,9 +13,9 @@ public class LegalQueen implements Rule {
         if (piece == null || piece.figure != Figure.QUEEN)
             return true;
 
-        Rule bishop = new LegalBishop();
-        Rule rook = new LegalRook();
 
-        return bishop.check(move, board) || rook.check(move, board);
+        boolean b = LegalBishop.isDiagonalMove(move, board);
+        boolean r = LegalRook.isHorizontalVerticalMove(move, board);
+        return b || r;
     }
 }

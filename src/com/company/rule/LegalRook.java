@@ -13,6 +13,11 @@ public class LegalRook implements Rule {
         if (piece == null || piece.figure != Figure.ROOK)
             return true;
 
+        return isHorizontalVerticalMove(move, board);
+
+    }
+
+    public static boolean isHorizontalVerticalMove(Move move, Board board) {
         // check if legal move
         if(move.from.x != move.to.x && move.from.y != move.to.y)
             return false;
@@ -42,6 +47,7 @@ public class LegalRook implements Rule {
         }
 
         return true;
+
     }
 
 }
