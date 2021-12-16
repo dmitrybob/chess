@@ -7,9 +7,10 @@ import com.company.rule.*;
 
 public class Board{
 
+    public static final int SIZE = 8;
     public Piece[][] board = new Piece[8][8];
 
-    private Rule[] rules = {
+    private Rule[] preMoveRules = {
         new LegalPawn(),
         new LegalRook(),
         new LegalKnight(),
@@ -20,7 +21,21 @@ public class Board{
         new IsSameColor()
     };
 
+    private Rule[] postMoveRules = {
+        new CheckRule()
+    };
+
     public boolean whiteTurn = true;
+
+    public Board(Board toCopy) {
+        whiteTurn = toCopy.whiteTurn;
+
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                board[i][j] = toCopy.board[i][j];
+            }
+        }
+    }
 
     public Board() {
         //White pieces
@@ -148,7 +163,7 @@ public class Board{
 
     public boolean isLegalMove(Move move){
         int x = 0;
-        for(Rule rule: rules) {
+        for(Rule rule: preMoveRules) {
             x++;
             if(!rule.check(move, this)) {
                 if(x == 1){
@@ -178,6 +193,17 @@ public class Board{
                 return false;
             }
         }
+
+        Board throwAwayBoard = new Board(this);
+        throwAwayBoard.move(move);
+
+        for(Rule rule: postMoveRules) {
+            if(!rule.check(move, throwAwayBoard)) {
+                System.out.println("not allowed opens check");
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -185,8 +211,8 @@ public class Board{
         //color is the color of the king
         Color otherColor = kingColor == Color.WHITE ? Color.BLACK : Color.WHITE;
         Cell kingPos = null;
-        for(int i = 0; i <= 7; i++){
-            for(int j = 0; j <= 7; j++){
+        for(int i = 0; i < SIZE; i++){
+            for(int j = 0; j < SIZE; j++){
                 if(board[i][j] == null)
                     continue;
                 if(board[i][j].figure == Figure.KING && board[i][j].color == kingColor) {
@@ -196,24 +222,23 @@ public class Board{
             }
         }
 
-        for(int i = 0; i <= 7; i++){
-            for(int j = 0; j <= 7; j++){
+        for(int i = 0; i < SIZE; i++){
+            for(int j = 0; j < SIZE; j++){
                 if(board[i][j] == null || board[i][j].figure == Figure.KING)
                     continue;
                 if(board[i][j].color == otherColor) {
                     Cell figurePos = new Cell(i, j);
-                    Move move = new Move(board[i][j].figure, otherColor, figurePos, kingPos);
+                    Move tentativeMove = new Move(board[i][j].figure, otherColor, figurePos, kingPos);
                     // is any rule broken?
                     boolean isIllegal = false;
-                    for(Rule rule: rules) {
-                        if(!rule.check(move, this)) {
+                    for(Rule rule: preMoveRules) {
+                        if(!rule.check(tentativeMove, this)) {
                             isIllegal = true;
                             break;
                         }
                     }
 
                     if(!isIllegal) {
-                        System.out.println(move);
                         return true;
                     }
                 }

@@ -20,11 +20,11 @@ public class Main {
 
             boolean res = board.isLegalMove(move);
             if (res) {
-                System.out.println("your last move was legal");
                 board.move(move);
-                boolean isCheckWhite = board.isCheck(Color.WHITE);
-                boolean isCheckBlack = board.isCheck(Color.BLACK);
-                System.out.println("check " + isCheckWhite + " " + isCheckBlack);
+                Color color = board.whiteTurn ? Color.WHITE : Color.BLACK;
+                if(board.isCheck(color))
+                    System.out.println("CHECK!");
+
             }
         }
     }
