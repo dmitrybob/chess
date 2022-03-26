@@ -7,7 +7,7 @@ import com.company.Move;
 
 public class LegalKnight implements Rule {
     @Override
-    public boolean check(Move move, Board board) {
+    public boolean check(Move move, Board board) throws Exception {
         Piece piece = board.pieceAt(move.from);
 
         if (piece == null || piece.figure != Figure.KNIGHT)
@@ -23,6 +23,6 @@ public class LegalKnight implements Rule {
                 return true;
             }
         }
-        return false;
+        throw new Exception("knight - incorrect move");
     }
 }

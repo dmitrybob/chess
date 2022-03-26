@@ -8,7 +8,7 @@ import com.company.Move;
 
 public class LegalPawn implements Rule {
     @Override
-    public boolean check(Move move, Board board) {
+    public boolean check(Move move, Board board) throws Exception{
         Piece piece = board.pieceAt(move.from);
         if (piece == null || piece.figure != Figure.PAWN)
             return true;
@@ -25,7 +25,7 @@ public class LegalPawn implements Rule {
                     // check if figure in the way
                     for (int i = move.from.y + 1; i <= move.to.y; i++) {
                         if (board.board[move.to.x][i] != null)
-                            return false;
+                            throw new Exception("pawn - figure is in the way");
                     }
                     return true;
                 }
@@ -36,7 +36,7 @@ public class LegalPawn implements Rule {
                 } else if (move.from.y == 6 && move.from.y == move.to.y + 2) {
                     for (int i = move.from.y - 1; i >= move.to.y; i--) {
                         if (board.board[move.to.x][i] != null)
-                            return false;
+                            throw new Exception("pawn - incorrect move");;
                     }
                     return true;
                 }
@@ -59,6 +59,6 @@ public class LegalPawn implements Rule {
                     return !(board.board[move.to.x+1][move.to.y-1] == null);
             }
         }
-        return false;
+        throw new Exception("pawn - incorrect move");
     }
 }

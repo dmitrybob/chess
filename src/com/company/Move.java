@@ -17,6 +17,6 @@ public class Move {
     }
 
     public String toString() {
-        return figure + " " + color + " from:" + from + " to:" + to;
+        return figure + " " + color + " " + from  + to;
     }
 }

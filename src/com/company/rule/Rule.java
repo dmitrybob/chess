@@ -4,5 +4,5 @@ import com.company.Board;
 import com.company.Move;
 
 public interface Rule {
-    boolean check(Move move, Board board);
+    boolean check(Move move, Board board) throws Exception;
 }

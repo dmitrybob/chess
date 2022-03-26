@@ -10,6 +10,6 @@ public class Cell {
     }
 
     public String toString() {
-        return x + ":" + y;
+        return Board.intToChr(x) + "" + (y + 1);
     }
 }

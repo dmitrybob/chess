@@ -7,7 +7,7 @@ import com.company.Move;
 
 public class LegalRook implements Rule {
     @Override
-    public boolean check(Move move, Board board) {
+    public boolean check(Move move, Board board) throws Exception {
         Piece piece = board.pieceAt(move.from);
 
         if (piece == null || piece.figure != Figure.ROOK)
@@ -17,10 +17,14 @@ public class LegalRook implements Rule {
 
     }
 
-    public static boolean isHorizontalVerticalMove(Move move, Board board) {
+    public static boolean isHorizontalVerticalMove(Move move, Board board) throws Exception {
         // check if legal move
         if(move.from.x != move.to.x && move.from.y != move.to.y)
-            return false;
+            if(board.pieceAt(move.from.x, move.from.y).figure == Figure.ROOK)
+                throw new Exception("rook - not horizontal or vertical move");
+            else
+                throw new Exception("queen - not horizontal or vertical move");
+
 
         // check no figure in the way
         int steps = Math.max(Math.abs(move.to.x - move.from.x),  Math.abs(move.to.y - move.from.y));
@@ -28,8 +32,11 @@ public class LegalRook implements Rule {
         while (count < steps) {
 
             if(count != 0 && board.pieceAt(i, j) != null) {
-                System.out.println("error at " + i + ":" + j);
-                return false;
+                if(board.pieceAt(move.from.x, move.from.y).figure == Figure.ROOK)
+                    throw new Exception("rook - figure in the way");
+                else
+                    throw new Exception("queen - figure in the way");
+
             }
 
             // move on to next step

@@ -151,6 +151,30 @@ public class Board{
         return x;
     }
 
+    public static char intToChr(int n) {
+        int x = 0;
+        switch (n) {
+            case 0:
+                return 'a';
+            case 1:
+                return 'b';
+            case 2:
+                return 'c';
+            case 3:
+                return 'd';
+            case 4:
+                return 'e';
+            case 5:
+                return 'f';
+            case 6:
+                return 'g';
+            case 7:
+                return 'h';
+        }
+
+        return 'g';
+    }
+
     public void updateBoard(Move move){
         board[move.from.x][move.from.y] = null;
         board[move.to.x][move.to.y] = new Piece(move.color, move.figure);
@@ -162,34 +186,11 @@ public class Board{
     }
 
     public boolean isLegalMove(Move move){
-        int x = 0;
         for(Rule rule: preMoveRules) {
-            x++;
-            if(!rule.check(move, this)) {
-                if(x == 1){
-                    System.out.println("This is not a legal pawn move or a piece is in the way");
-                }
-                if(x == 2){
-                    System.out.println("This is not a legal rook move or a piece is in the way");
-                }
-                if(x == 3){
-                    System.out.println("This is not a legal knight move or a piece is in the way");
-                }
-                if(x == 4){
-                    System.out.println("This is not a legal bishop move or a piece is in the way");
-                }
-                if(x == 5){
-                    System.out.println("This is not a legal king move or a piece is in the way");
-                }
-                if(x == 6){
-                    System.out.println("This is not a legal queen move or a piece is in the way");
-                }
-                if(x == 7){
-                    System.out.println("That piece is not in that square");
-                }
-                if(x == 8){
-                    System.out.println("You have a piece on that square");
-                }
+            try {
+                rule.check(move, this);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
                 return false;
             }
         }
@@ -198,8 +199,10 @@ public class Board{
         throwAwayBoard.move(move);
 
         for(Rule rule: postMoveRules) {
-            if(!rule.check(move, throwAwayBoard)) {
-                System.out.println("not allowed opens check");
+            try {
+                rule.check(move, throwAwayBoard);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
                 return false;
             }
         }
@@ -211,6 +214,8 @@ public class Board{
         //color is the color of the king
         Color otherColor = kingColor == Color.WHITE ? Color.BLACK : Color.WHITE;
         Cell kingPos = null;
+
+        // find king position
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j < SIZE; j++){
                 if(board[i][j] == null)
@@ -228,17 +233,21 @@ public class Board{
                     continue;
                 if(board[i][j].color == otherColor) {
                     Cell figurePos = new Cell(i, j);
+                    // try a next move and see if it hits the king
                     Move tentativeMove = new Move(board[i][j].figure, otherColor, figurePos, kingPos);
                     // is any rule broken?
                     boolean isIllegal = false;
                     for(Rule rule: preMoveRules) {
-                        if(!rule.check(tentativeMove, this)) {
+                        try {
+                            rule.check(tentativeMove, this);
+                        } catch (Exception e) {
                             isIllegal = true;
                             break;
                         }
                     }
 
                     if(!isIllegal) {
+                        System.out.println(tentativeMove);
                         return true;
                     }
                 }
