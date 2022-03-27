@@ -8,14 +8,14 @@ import com.company.Move;
 
 public class CheckPosition implements Rule {
     @Override
-    public boolean check(Move move, Board board) {
+    public boolean check(Move move, Board board) throws Exception {
         Piece piece = board.pieceAt(move.from);
         if(piece == null || piece.color != move.color)
+            throw new Exception("That figure is your color");
 
-            return false;
 
         if(piece == null || piece.figure != move.figure)
-            return false;
+            throw new Exception("the figure you want to move is not their");
 
         return true;
     }

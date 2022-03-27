@@ -20,10 +20,7 @@ public class LegalRook implements Rule {
     public static boolean isHorizontalVerticalMove(Move move, Board board) throws Exception {
         // check if legal move
         if(move.from.x != move.to.x && move.from.y != move.to.y)
-            if(board.pieceAt(move.from.x, move.from.y).figure == Figure.ROOK)
-                throw new Exception("rook - not horizontal or vertical move");
-            else
-                throw new Exception("queen - not horizontal or vertical move");
+            throw new Exception("rook - not horizontal or vertical move");
 
 
         // check no figure in the way
@@ -32,11 +29,7 @@ public class LegalRook implements Rule {
         while (count < steps) {
 
             if(count != 0 && board.pieceAt(i, j) != null) {
-                if(board.pieceAt(move.from.x, move.from.y).figure == Figure.ROOK)
-                    throw new Exception("rook - figure in the way");
-                else
-                    throw new Exception("queen - figure in the way");
-
+                throw new Exception("rook - figure in the way");
             }
 
             // move on to next step

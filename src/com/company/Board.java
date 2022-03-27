@@ -247,7 +247,6 @@ public class Board{
                     }
 
                     if(!isIllegal) {
-                        System.out.println(tentativeMove);
                         return true;
                     }
                 }

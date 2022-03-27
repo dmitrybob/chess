@@ -6,8 +6,11 @@ import com.company.Move;
 
 public class CheckRule implements Rule {
     @Override
-    public boolean check(Move move, Board board) {
+    public boolean check(Move move, Board board) throws Exception {
         Color color = board.whiteTurn ? Color.BLACK : Color.WHITE;
-        return !board.isCheck(color);
+        if(board.isCheck(color))
+            throw new Exception("You can not open your king to check");
+        else
+            return true;
     }
 }

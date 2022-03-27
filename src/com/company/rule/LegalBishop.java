@@ -18,10 +18,7 @@ public class LegalBishop implements Rule {
         int x = Math.abs(move.to.x - move.from.x);
         int y = Math.abs(move.to.y - move.from.y);
         if(x != y)
-            if(board.pieceAt(move.from.x, move.from.y).figure == Figure.BISHOP)
-                throw new Exception("bishop - incorrect move");
-            else
-                throw new Exception("queen - incorrect move");
+            throw new Exception("bishop - incorrect move");
 
 
 
@@ -29,10 +26,7 @@ public class LegalBishop implements Rule {
         while (count < x) {
 
             if(count != 0 && board.pieceAt(i, j) != null) {
-                if(board.pieceAt(move.from.x, move.from.y).figure == Figure.BISHOP)
-                    throw new Exception("bishop - incorrect move");
-                else
-                    throw new Exception("queen - incorrect move");
+                throw new Exception("bishop - incorrect move");
             }
 
             // move on to next step

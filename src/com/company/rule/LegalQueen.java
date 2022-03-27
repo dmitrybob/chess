@@ -14,9 +14,17 @@ public class LegalQueen implements Rule {
             return true;
 
 
+        try {
+            LegalBishop.isDiagonalMove(move, board);
+            return true;
+        } catch (Exception e) {}
 
-        boolean b = LegalBishop.isDiagonalMove(move, board);
-        boolean r = LegalRook.isHorizontalVerticalMove(move, board);
-        return b || r;
+        try {
+            // if we are here - move is not diagonal
+            LegalRook.isHorizontalVerticalMove(move, board);
+            return true;
+        } catch (Exception e) {
+            throw new Exception("queen not diagonal or horizontal/vertical move");
+        }
     }
 }

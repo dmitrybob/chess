@@ -21,6 +21,8 @@ public class Main {
             boolean res = board.isLegalMove(move);
             if (res) {
                 board.move(move);
+                //todo does not check if correct color is moved
+                System.out.println("next move " + (board.whiteTurn? "white":"black"));
                 Color color = board.whiteTurn ? Color.WHITE : Color.BLACK;
                 if(board.isCheck(color))
                     System.out.println("CHECK!");
