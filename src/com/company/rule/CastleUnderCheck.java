@@ -4,13 +4,14 @@ import com.company.Board;
 import com.company.Enums.Color;
 import com.company.Move;
 
-public class CheckRule implements Rule {
+public class CastleUnderCheck implements Rule{
     @Override
     public boolean check(Move move, Board board) throws Exception {
         Color color = board.whiteTurn ? Color.BLACK : Color.WHITE;
-        if(board.isCheck(color))
-            throw new Exception("You are under check");
-        else
+        if(move != Move.SHORT_CASTLE && move != Move.LONG_CASTLE )
             return true;
+        if(!board.castleIsCheck(move, color))
+            throw new Exception("Cannot Castle - Spaces in between are under check");
+        return true;
     }
 }

@@ -7,6 +7,8 @@ import com.company.Move;
 public class IsSameColor implements Rule {
     @Override
     public boolean check(Move move, Board board) throws Exception {
+        if(move == Move.SHORT_CASTLE || move == Move.LONG_CASTLE)
+            return true;
         if(board.pieceAt(move.to) == null)
             return true;
 

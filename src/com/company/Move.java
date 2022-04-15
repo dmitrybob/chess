@@ -4,6 +4,9 @@ import com.company.Enums.Color;
 import com.company.Enums.Figure;
 
 public class Move {
+
+    public static Move SHORT_CASTLE = new Move(Figure.KING, Color.WHITE, null, null);
+    public static Move LONG_CASTLE = new Move(Figure.KING, Color.WHITE, null, null);
     public Figure figure;
     public Color color;
     public Cell from;

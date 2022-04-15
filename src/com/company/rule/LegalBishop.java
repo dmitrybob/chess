@@ -7,6 +7,8 @@ import com.company.Move;
 public class LegalBishop implements Rule {
     @Override
     public boolean check(Move move, Board board) throws Exception {
+        if(move == Move.SHORT_CASTLE || move == Move.LONG_CASTLE)
+            return true;
         Piece piece = board.pieceAt(move.from);
         if (piece == null || piece.figure != Figure.BISHOP)
             return true;

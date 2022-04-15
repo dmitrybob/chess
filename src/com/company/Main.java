@@ -3,15 +3,32 @@ package com.company;
 import com.company.Enums.Color;
 
 import java.util.Scanner;
+// todo castle
+// todo en passant
+// todo checkmate
+// todo pawn turn into a figure
+// todo stalemate
+// todo cannot castle over checked cell
+// todo insufficient material
+ //todo check if pieces are in the way when castling
+
 public class Main {
+
     public static void main(String[] args) {
-        // todo move not same
         Scanner scanner = new Scanner(System.in);
         Board board = new Board();
         while (true) {
             System.out.println("Please enter your next move:");
             String userInput = scanner.nextLine();
-            if(!isLegalNotation(userInput)) {
+            if(userInput.equals("sb")) {
+                board.showBoard();
+                continue;
+            }
+            if(userInput.equals("wt")) {
+                board.printTurn();
+                continue;
+            }
+            if(!isLegalNotation(userInput) && !userInput.equals("0-0") && !userInput.equals("0-0-0")) {
                 System.out.println("this is not a correctly written move");
                 continue;
             }
@@ -21,12 +38,10 @@ public class Main {
             boolean res = board.isLegalMove(move);
             if (res) {
                 board.move(move);
-                //todo does not check if correct color is moved
                 System.out.println("next move " + (board.whiteTurn? "white":"black"));
                 Color color = board.whiteTurn ? Color.WHITE : Color.BLACK;
                 if(board.isCheck(color))
                     System.out.println("CHECK!");
-
             }
         }
     }
