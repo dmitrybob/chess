@@ -2,16 +2,17 @@ package com.company.rule;
 
 import com.company.Board;
 import com.company.Enums.Color;
+import com.company.Enums.Figure;
 import com.company.Move;
 
-public class CastleUnderCheck implements Rule{
+public class Checkmate implements Rule{
     @Override
     public boolean check(Move move, Board board) throws Exception {
         Color color = board.whiteTurn ? Color.WHITE : Color.BLACK;
-        if(move != Move.SHORT_CASTLE && move != Move.LONG_CASTLE )
+        if(!board.isCheck(color))
             return true;
-        if(board.castleIsCheck(move, color))
-            throw new Exception("Cannot Castle - Spaces in between are under check");
-        return true;
+        if(board.kingAbleToMove(color) || board.pieceBlocks(color))
+            return true;
+        throw new Exception("CHECKMATE!");
     }
 }

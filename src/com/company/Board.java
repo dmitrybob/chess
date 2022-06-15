@@ -4,9 +4,10 @@ import com.company.Enums.Color;
 import com.company.Enums.Figure;
 import com.company.Enums.Piece;
 import com.company.rule.*;
+import com.oracle.tools.packager.JreUtils;
 
 public class Board{
-
+    public static boolean notFirstMove = false;
     public static final int SIZE = 8;
     public Piece[][] board = new Piece[8][8];
     boolean whiteKingHasMoved = false;
@@ -31,7 +32,8 @@ public class Board{
     };
 
     private Rule[] postMoveRules = {
-        new CheckRule()
+        new CheckRule(),
+        new Checkmate()
     };
 
     public boolean whiteTurn = true;
@@ -98,7 +100,28 @@ public class Board{
             return Move.LONG_CASTLE;
         Figure figure = null;
         switch (userInput.charAt(0)) {
-            case 'P':
+            case 'a':
+                figure = Figure.PAWN;
+                break;
+            case 'b':
+                figure = Figure.PAWN;
+                break;
+            case 'c':
+                figure = Figure.PAWN;
+                break;
+            case 'd':
+                figure = Figure.PAWN;
+                break;
+            case 'e':
+                figure = Figure.PAWN;
+                break;
+            case 'f':
+                figure = Figure.PAWN;
+                break;
+            case 'g':
+                figure = Figure.PAWN;
+                break;
+            case 'h':
                 figure = Figure.PAWN;
                 break;
             case 'K':
@@ -119,11 +142,23 @@ public class Board{
             default:
                 break;
         }
+        int x1 = 0;
+        int y1 = 0;
+        int x2 = 0;
+        int y2 = 0;
 
-        int x1 = charToInt(userInput.charAt(1));
-        int y1 = userInput.charAt(2) - '1';
-        int x2 = charToInt(userInput.charAt(3));
-        int y2 = userInput.charAt(4) - '1';
+        if(userInput.length() == 4) {
+            x1 = charToInt(userInput.charAt(0));
+            y1 = userInput.charAt(1) - '1';
+            x2 = charToInt(userInput.charAt(2));
+            y2 = userInput.charAt(3) - '1';
+        }
+        else {
+            x1 = charToInt(userInput.charAt(1));
+            y1 = userInput.charAt(2) - '1';
+            x2 = charToInt(userInput.charAt(3));
+            y2 = userInput.charAt(4) - '1';
+        }
 
         Color color = isWhiteTurn ? Color.WHITE : Color.BLACK;
         Move move = new Move(figure, color, new Cell(x1, y1), new Cell(x2, y2));
@@ -188,34 +223,39 @@ public class Board{
     }
 
     public void updateBoard(Move move){
+
         if(move == Move.SHORT_CASTLE) {
             if (whiteTurn) {
-                board[4][0] = null;
+                board[0][4] = null;
                 board[0][0] = null;
-                board[6][0] = new Piece(Color.WHITE, Figure.KING);
-                board[5][0] = new Piece(Color.WHITE, Figure.ROOK);
+                board[0][6] = new Piece(Color.WHITE, Figure.KING);
+                board[0][5] = new Piece(Color.WHITE, Figure.ROOK);
             } else {
-                board[4][7] = null;
-                board[1][7] = null;
-                board[6][7] = new Piece(Color.BLACK, Figure.KING);
-                board[5][7] = new Piece(Color.BLACK, Figure.ROOK);
+                board[7][4] = null;
+                board[7][1] = null;
+                board[7][6] = new Piece(Color.BLACK, Figure.KING);
+                board[7][5] = new Piece(Color.BLACK, Figure.ROOK);
             }
             return;
         }
         if(move == Move.LONG_CASTLE) {
             if (whiteTurn) {
-                board[4][0] = null;
-                board[1][0] = null;
-                board[3][0] = new Piece(Color.WHITE, Figure.KING);
-                board[4][0] = new Piece(Color.WHITE, Figure.ROOK);
+                board[0][4] = null;
+                board[0][1] = null;
+                board[0][3] = new Piece(Color.WHITE, Figure.KING);
+                board[0][4] = new Piece(Color.WHITE, Figure.ROOK);
             } else {
-                board[4][7] = null;
-                board[0][7] = null;
-                board[3][7] = new Piece(Color.BLACK, Figure.KING);
-                board[4][7] = new Piece(Color.BLACK, Figure.ROOK);
+                board[7][4] = null;
+                board[7][0] = null;
+                board[7][3] = new Piece(Color.BLACK, Figure.KING);
+                board[7][4] = new Piece(Color.BLACK, Figure.ROOK);
             }
             return;
         }
+        if(whiteTurn && move.from.y == 1 && move.to.y == 3)
+            board[move.from.x][move.from.y].firstMove = true;
+        if(!whiteTurn && move.from.y == 6  && move.to.y == 4)
+            board[move.from.x][move.from.y].firstMove = true;
         board[move.from.x][move.from.y] = null;
         board[move.to.x][move.to.y] = new Piece(move.color, move.figure);
         if(board[move.to.x][move.to.y].color == Color.WHITE && board[move.to.x][move.to.y].figure == Figure.KING)
@@ -336,15 +376,12 @@ public class Board{
     public boolean castleIsCheck(Move move, Color kingColor){
         Color otherColor = kingColor == Color.WHITE ? Color.BLACK : Color.WHITE;
         Cell kingPos = null;
-        int r = otherColor == Color.WHITE ? 0 : 7;
+        int r = otherColor == Color.WHITE ? 7 : 0;
         int c = move == Move.SHORT_CASTLE ? 5 : 3;
         int x = 0;
         int y = move == Move.SHORT_CASTLE ? 2 : 3;
         while(x < y) {
-            if(x == 2)
-                kingPos = new Cell(r, c);
-            else
-                kingPos = new Cell(r, c);
+            kingPos = new Cell(c, r);
             for (int i = 0; i < SIZE; i++) {
                 for (int j = 0; j < SIZE; j++) {
                     if (board[i][j] == null || board[i][j].figure == Figure.KING)
@@ -385,7 +422,7 @@ public class Board{
             if(board[y][5] == null && board[y][6] == null)
                     return false;
         if(move == Move.LONG_CASTLE)
-            if(board[y][2] == null && board[y][3] == null && board[y][4] == null)
+            if(board[y][1] == null && board[y][2] == null && board[y][3] == null)
                 return false;
         return true;
     }
@@ -416,6 +453,106 @@ public class Board{
         s += y + 1;
         s += " ";
         return s;
+    }
+
+    public boolean kingAbleToMove(Color color) {
+        Cell kingPos = null;
+        for (int i = 0; i <  board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+                if(board[i][j] != null && board[i][j].figure == Figure.KING)
+                    if(board[i][j].color == color)
+                        kingPos = new Cell(i, j);
+            }
+        }
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                if(kingPos.x + i <= 0 || kingPos.x + i >= 7)
+                    continue;
+                if(kingPos.y + j <= 0 || kingPos.y + j >= 7)
+                    continue;
+                Cell to = new Cell(kingPos.x + i, kingPos.y + j);
+                Move tentativeMove = new Move(Figure.KING, color, kingPos, to);
+                Rule rule = new CheckRule();
+                boolean illegalMove = false;
+                for (Rule rules : preMoveRules) {
+                    try {
+                        rules.check(tentativeMove, this);
+                    } catch (Exception e) {
+                        illegalMove = true;
+                        break;
+                    }
+                }
+                if(illegalMove)
+                    continue;
+                try {
+                    rule.check(tentativeMove, this);
+                    return true;
+                } catch (Exception e) {
+
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean pieceBlocks(Color color){
+        for (int r = 0; r < board.length; r++) {
+            for (int c = 0; c < board[0].length; c++) {
+                if(board[r][c] != null && board[r][c].color == color)
+                    if(board[r][c].figure != Figure.KING)
+                        for (int i = 0; i < board.length; i++) {
+                            for (int j = 0; j < board[0].length; j++) {
+                                if(i == r && j == c)
+                                    continue;
+                                Cell from = new Cell(r,c);
+                                Cell to = new Cell(i,j);
+                                Move tentativeMove = new Move(board[r][c].figure, board[r][c].color, from, to);
+                                Rule rule = new CheckRule();
+                                boolean illegalMove = false;
+                                for (Rule rules : preMoveRules) {
+                                    try {
+                                        rules.check(tentativeMove, this);
+                                    } catch (Exception e) {
+                                        illegalMove = true;
+                                        break;
+                                    }
+                                }
+                                if(illegalMove)
+                                    continue;
+                                try{
+                                    rule.check(tentativeMove, this);
+                                } catch (Exception e) {
+                                    return true;
+                                }
+                            }
+                        }
+            }
+        }
+        return false;
+    }
+
+    public boolean pawnTransform(){
+        if(!whiteTurn)
+            for(int i = 0; i < board.length; i++)
+                if(board[i][7] != null && board[i][7].equals(new Piece(Color.WHITE, Figure.PAWN)))
+                    return true;
+        if(whiteTurn)
+             for(int i = 0; i < board.length; i++)
+                if(board[i][7] != null && board[i][7].equals(new Piece(Color.BLACK, Figure.PAWN)))
+                    return true;
+        return false;
+    }
+
+    public Piece getTransformedPawn(){
+        if(!whiteTurn)
+            for(int i = 0; i < board.length; i++)
+                if(board[i][7].figure == Figure.PAWN)
+                    return board[i][7];
+        if(whiteTurn)
+            for(int i = 0; i < board.length; i++)
+                if(board[0][i].figure == Figure.PAWN)
+                    return board[i][0];
+        return null;
     }
 
     public void showBoard(){

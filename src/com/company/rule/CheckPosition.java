@@ -12,12 +12,15 @@ public class CheckPosition implements Rule {
         if(move == Move.SHORT_CASTLE || move == Move.LONG_CASTLE)
             return true;
         Piece piece = board.pieceAt(move.from);
-        if(piece == null || piece.color != move.color)
+        if(piece != null && piece.color != move.color)
             throw new Exception("That figure is not your color");
 
 
-        if(piece == null || piece.figure != move.figure)
-            throw new Exception("the figure you want to move is not their");
+        if(piece != null && piece.figure != move.figure)
+            throw new Exception("the figure you want to move is not there");
+
+        if(piece == null)
+            throw new Exception("their is no piece there");
 
         return true;
     }

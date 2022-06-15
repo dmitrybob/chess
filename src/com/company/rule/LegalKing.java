@@ -27,9 +27,17 @@ public class LegalKing implements Rule {
                 return true;
         }
 
-        if(move.to.y - 1 == move.from.y && move.from.x - 1 == move.to.x){
+        if(move.to.y - 1 == move.from.y && move.from.x - 1 == move.to.x)
             return true;
-        }
+
+        if(move.to.y + 1 == move.from.y && move.from.x + 1 == move.to.x)
+            return true;
+
+        if(move.to.y + 1 == move.from.y && move.from.x - 1 == move.to.x)
+            return true;
+
+        if(move.to.y - 1 == move.from.y && move.from.x + 1 == move.to.x)
+            return true;
 
         throw new Exception("king - incorrect move");
     }
